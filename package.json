@@ -1,0 +1,16 @@
+{
+  "name": "messwithhartej",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lol.js",
+  "scripts": {
+    "start": "node lol.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "facebook-chat-api": "^1.6.1"
+  }
+}
