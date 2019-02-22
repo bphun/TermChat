@@ -9,7 +9,8 @@ module.exports = function(options, api) {
 	api.setOptions({
 		listenEvents: true,
 		selfListen: true, //also lets you listen to your own messages or events
-		logLevel: "silent"
+		logLevel: "silent",
+		updatePresence: true
 	});
 
 	options.forEach(function(val, index, array) {
@@ -94,7 +95,9 @@ module.exports = function(options, api) {
 					handleMessageReaction(event);
 					break;
 
-					case "presence"
+					case "presence":
+					handlePresence(event);
+					break;
 				}
 			}
 		});
@@ -102,7 +105,11 @@ module.exports = function(options, api) {
 }
 
 function handleMessage(event) {
-	console.log(`${monitoredThreadInfo[event.threadID]["members"][event.senderID].name}->${monitoredThreadInfo[event.threadID].threadName}: ${event.body !== "" ? event.body : "Unsupported Message Type"}`)
+	if (monitoredThreadInfo[event.threadID]["members"][event.senderID].name === monitoredThreadInfo[event.threadID].threadName) {
+		console.log(`${monitoredThreadInfo[event.threadID]["members"][event.senderID].name}: ${event.body !== "" ? event.body : "Unsupported Message Type"}`)
+	} else {
+		console.log(`${monitoredThreadInfo[event.threadID]["members"][event.senderID].name}->${monitoredThreadInfo[event.threadID].threadName}: ${event.body !== "" ? event.body : "Unsupported Message Type"}`)
+	}
 }
 
 function handleThreadMemberType(event) {
@@ -118,5 +125,9 @@ function handleReadReceipt(event) {
 }
 
 function handleMessageReaction(event) {
+	console.log(`${monitoredThreadInfo[event.threadID]["members"][event.senderID].name} reacted to your message with ${event.reaction}`);
+}
 
+function handlePresence(event) {
+	console.log(event);
 }
