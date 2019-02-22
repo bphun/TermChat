@@ -16,6 +16,12 @@ if (process.argv[2] === '-h' || process.argv[2] === '--help') {
 login({email: process.env.email, password: process.env.password}, (err, api) => {
 	if (err) { return console.error(err); }
 
+	//lets api.listen listener capture events as well as messages
+	api.setOptions({
+		listenEvents: true,
+		selfListen: true //also lets you listen to your own messages or events
+	});
+
 	api.getThreadList(10, null, [], (err, list) => {
 		if (err) { return console.error(err); }
 
@@ -27,13 +33,35 @@ login({email: process.env.email, password: process.env.password}, (err, api) => 
 					return;
 				}
 
-				if (process.argv.length == 4) {
-					if (process.argv[4] == "Parjanya") {
-						makeAdmin(groupId, 100010153571152, true);
-						console.log("You're now an admin!");
+				//this is where the listener runs, change the actions for the events in the switch statement
+				let stopListening = api.listen((err, event) => {
+					if (err) return console.error(err);
+
+					switch (event.type) {
+						case "message":
+							console.log(event.body);
+							break;
+						case "event":
+							console.log(event.logMessageData);
+							break;
+						case "typ":
+							console.log(event.from);
+							break;
+						case "read":
+							console.log(event);
+							break;
+						case "read_receipt":
+							console.log(event);
+							break;
+						case "message_reaction":
+							console.log(event);
+							break;
+						default:
+							break;
 					}
-				}
-				else if (process.argv.length == 3) {
+				});
+				
+				if (process.argv.length == 3) {
 					for (let i = 0; i < parseInt(process.argv[2]); i++) {
 						console.log('Sending Thumbs up...')
 						api.sendMessage(data, thread.threadID);
@@ -41,7 +69,8 @@ login({email: process.env.email, password: process.env.password}, (err, api) => 
 						await sleep(1000);
 					}
 				} else {
-					api.sendMessage(data, thread.threadID);
+					//I commented this out cuz we're doing other stuff now lol
+					//api.sendMessage(data, thread.threadID);
 				}
 			}
 		});
@@ -52,8 +81,4 @@ function sleep(ms) {
 	return new Promise(resolve => {
 		setTimeout(resolve, ms);
 	});
-}
-
-function makeAdmin(thread_id, admin_id, admin_status) {
-	api.changeAdminStatus(thread_id, admin_id, admin_status);
 }
