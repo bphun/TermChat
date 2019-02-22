@@ -54,14 +54,16 @@ process.argv.forEach(function(val, index, array) {
 	}
 }); 
 
+if (threadsToProcess.length == 0) {
+	threadsToProcess[0] = process.env.defaultThreadName;
+} 
+
 console.log(`Sending ${thumbsToSend} thumbs up to:`);
 threadsToProcess.forEach(function(val) {
 	console.log(`\t${val}`);
 })
 
-if (threadsToProcess.length == 0) {
-	threadsToProcess[0] = process.env.defaultThreadName;
-} 
+
 
 login({email: process.env.email, password: process.env.password}, (err, api) => {
 	if (err) { return console.error(err); }
