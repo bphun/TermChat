@@ -1,9 +1,10 @@
 const fs = require('fs');
 
+let monitoredThreadInfo = {};
+
 module.exports = function(options, api) {
 
 	let threadsToProcess = [];
-	let monitoredThreads = {};
 
 	api.setOptions({
 		listenEvents: true,
@@ -56,41 +57,50 @@ module.exports = function(options, api) {
 
 		list.forEach(async function(thread) {
 			if (threadsToProcess.includes(thread.name)) {
+				monitoredThreadInfo[thread.threadID] = 
+				{
+					threadName: thread.name,
+					members: {}
 
-				monitoredThreads[thread.threadID] = thread.name;
+				};
 
-				let stopListening = api.listen((err, event) => {
-					if (err) { return console.error(err); }
-
-					switch (event.type) {
-						case "message":
-							handleMessage(event);
-							break;
-
-						case "typ":
-							handleThreadMemberType(event);
-							break;
-
-						case "read":
-							handleThreadReadEvent(event);
-							break;
-
-						case "read_receipt":
-							handleReadReceipt(event);
-							break;
-
-						case "message_reaction":
-							handleMessageReaction(event);
-							break;
-					}
+				thread.participants.forEach(function(threadParticipantData) {
+					monitoredThreadInfo[thread.threadID]['members'][threadParticipantData.userID] = JSON.parse(`{"name": "${threadParticipantData.name}"}`);
 				});
+			}
+		});
+
+		let stopListening = api.listen((err, event) => {
+			if (err) { return console.error(err); }
+			if (monitoredThreadInfo[event.threadID] !== undefined) {
+				switch (event.type) {
+					case "message":
+					handleMessage(event);
+					break;
+
+					case "typ":
+					handleThreadMemberType(event);
+					break;
+
+					case "read":
+					handleThreadReadEvent(event);
+					break;
+
+					case "read_receipt":
+					handleReadReceipt(event);
+					break;
+
+					case "message_reaction":
+					handleMessageReaction(event);
+					break;
+				}
 			}
 		});
 	});
 }
 
 function handleMessage(event) {
-
+	console.log(`${monitoredThreadInfo[event.threadID]['members'][event.senderID].name}->${monitoredThreadInfo[event.threadID].threadName}: ${event.body !== '' ? event.body : 'Unsupported Message Type'}`)
 }
 
 function handleThreadMemberType(event) {
