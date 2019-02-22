@@ -14,7 +14,7 @@ if (process.argv.length < 2) {
 prompt.start();
 prompt.get([{
     name: 'username',
-    message: 'Enter your Facebook email: ',
+    message: 'Enter your Facebook email or phone number: ',
     required: true
 }, {
     name: 'password',
