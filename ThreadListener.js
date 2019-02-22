@@ -21,7 +21,7 @@ module.exports = function(options, api) {
 				break;
 			case '-dt':
 			case '--default-thread':
-				threadsToProcess.push(process.env.defaultThreadName);
+				threadsToProcess.push(process.env.defaultListenThreadName);
 				break;
 			case '--set-default':
 				fs.readFile('.env', 'utf-8', function(err, data) {
@@ -61,32 +61,50 @@ module.exports = function(options, api) {
 
 				let stopListening = api.listen((err, event) => {
 					if (err) { return console.error(err); }
-					console.log(event);
-					console.log(`${monitoredThreads[event.threadID]}: ${event.body}`);
-					// switch (event.type) {
-					// 	case "message":
-					// 		console.log(event.body);
-					// 		break;
-					// 	case "event":
-					// 		console.log(event.logMessageData);
-					// 		break;
-					// 	case "typ":
-					// 		console.log(event.from);
-					// 		break;
-					// 	case "read":
-					// 		console.log(event);
-					// 		break;
-					// 	case "read_receipt":
-					// 		console.log(event);
-					// 		break;
-					// 	case "message_reaction":
-					// 		console.log(event);
-					// 		break;
-					// 	default:
-					// 		break;
-					// }
+
+					switch (event.type) {
+						case "message":
+							handleMessage(event);
+							break;
+
+						case "typ":
+							handleThreadMemberType(event);
+							break;
+
+						case "read":
+							handleThreadReadEvent(event);
+							break;
+
+						case "read_receipt":
+							handleReadReceipt(event);
+							break;
+
+						case "message_reaction":
+							handleMessageReaction(event);
+							break;
+					}
 				});
 			}
 		});
 	});
+}
+
+function handleMessage(event) {
+
+}
+
+function handleThreadMemberType(event) {
+
+}
+
+function handleThreadReadEvent(event) {
+
+}
+
+function handleReadReceipt(event) {
+
+}
+
+function handleMessageReaction(event) {
+
 }
