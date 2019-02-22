@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require("fs");
 
 let monitoredThreadInfo = {};
 
@@ -14,30 +14,30 @@ module.exports = function(options, api) {
 
 	options.forEach(function(val, index, array) {
 		switch (val) {
-			case '-t':
-			case '--thread':
-				while (++index < array.length && !array[index].includes('-')) {
+			case "-t":
+			case "--thread":
+				while (++index < array.length && !array[index].includes("-")) {
 					threadsToProcess.push(array[index]);
 				}
 				break;
-			case '-dt':
-			case '--default-thread':
+			case "-dt":
+			case "--default-thread":
 				threadsToProcess.push(process.env.defaultListenThreadName);
 				break;
-			case '--set-default':
-				fs.readFile('.env', 'utf-8', function(err, data) {
-					let splitArray = data.split('\n');
-					splitArray.splice(splitArray.indexOf('defaultListenThreadName'), 1);
+			case "--set-default":
+				fs.readFile(".env", "utf-8", function(err, data) {
+					let splitArray = data.split("\n");
+					splitArray.splice(splitArray.indexOf("defaultListenThreadName"), 1);
 					splitArray[splitArray.length] = `defaultListenThreadName=${array[++index]}`
-					fs.writeFile('.env', splitArray.join('\n'), (err) => {});
+					fs.writeFile(".env", splitArray.join("\n"), (err) => {});
 				});
 				break;
-			case '-h':
-				console.log('Usage: node lol.js listen');
-				console.log('\t-dt --default-thread\tMonitor your designated default thread');
-				console.log('\t--set-default\t\tName of the thread that will be monitor by default if no thread name is provided');
-				console.log('\t-t --thread\t\tName of threads that you would like to monitor');
-				console.log('\t-h --help\t\tDisplay this help dialog');
+			case "-h":
+				console.log("Usage: node lol.js listen");
+				console.log("\t-dt --default-thread\tMonitor your designated default thread");
+				console.log("\t--set-default\t\tName of the thread that will be monitor by default if no thread name is provided");
+				console.log("\t-t --thread\t\tName of threads that you would like to monitor");
+				console.log("\t-h --help\t\tDisplay this help dialog");
 				console.log();
 				process.exit(0);
 		}
@@ -47,7 +47,7 @@ module.exports = function(options, api) {
 		threadsToProcess[0] = process.env.defaultThumbThreadName;
 	}
 
-	console.log('Listening to threads:');
+	console.log("Listening to threads:");
 	threadsToProcess.forEach(function(val) {
 		console.log(`\t${val}`);
 	});
@@ -65,7 +65,7 @@ module.exports = function(options, api) {
 				};
 
 				thread.participants.forEach(function(threadParticipantData) {
-					monitoredThreadInfo[thread.threadID]['members'][threadParticipantData.userID] = JSON.parse(`{"name": "${threadParticipantData.name}"}`);
+					monitoredThreadInfo[thread.threadID]["members"][threadParticipantData.userID] = JSON.parse(`{"name": "${threadParticipantData.name}"}`);
 				});
 			}
 		});
@@ -93,6 +93,8 @@ module.exports = function(options, api) {
 					case "message_reaction":
 					handleMessageReaction(event);
 					break;
+
+					case "presence"
 				}
 			}
 		});
@@ -100,7 +102,7 @@ module.exports = function(options, api) {
 }
 
 function handleMessage(event) {
-	console.log(`${monitoredThreadInfo[event.threadID]['members'][event.senderID].name}->${monitoredThreadInfo[event.threadID].threadName}: ${event.body !== '' ? event.body : 'Unsupported Message Type'}`)
+	console.log(`${monitoredThreadInfo[event.threadID]["members"][event.senderID].name}->${monitoredThreadInfo[event.threadID].threadName}: ${event.body !== "" ? event.body : "Unsupported Message Type"}`)
 }
 
 function handleThreadMemberType(event) {
