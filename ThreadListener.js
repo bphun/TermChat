@@ -135,17 +135,11 @@ function handleMessage(event) {
 	}
 }
 
-function handleThreadMemberType(event) {
+function handleThreadMemberType(event) {}
 
-}
+function handleThreadReadEvent(event) {}
 
-function handleThreadReadEvent(event) {
-
-}
-
-function handleReadReceipt(event) {
-
-}
+function handleReadReceipt(event) {}
 
 function handleMessageReaction(event) {
 	console.log(`${monitoredThreadInfo[event.threadID]["members"][event.senderID].name} reacted to your message with ${event.reaction}`);
