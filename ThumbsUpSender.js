@@ -1,7 +1,6 @@
 const fs = require("fs");
 
-module.exports = function(options, api) {
-
+function start(options, api) {
 	const payload = { sticker: 369239263222822 };
 
 	let thumbsToSend = 1;
@@ -64,16 +63,19 @@ module.exports = function(options, api) {
 			if (threadsToProcess.includes(thread.name)) {
 				for (var i = 0; i < thumbsToSend; i++) {
 					api.sendMessage(payload, thread.threadID);
-					await sleep(500);					
+				    await sleep(1000);
 				}
 			}
 		});
 	});
 }
-	
 
 function sleep(ms) {
 	return new Promise(resolve => {
 		setTimeout(resolve, ms);
 	});
+}
+
+module.exports = {
+	start: start
 }

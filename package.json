@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^6.2.0",
-    "facebook-chat-api": "^1.6.1",
-    "prompt": "^1.0.0"
+    "events": "^3.0.0",
+    "facebook-chat-api": "^1.6.1"
   }
 }
